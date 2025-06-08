@@ -19,6 +19,29 @@ function activate(context) {
 	// The commandId parameter must match the command field in package.json
 	const disposable = vscode.commands.registerCommand('array-indexer.helloWorld', function () {
 		// The code you place here will be executed every time your command is executed
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) return;
+		
+		let counter = 0;
+		const curly_regex = /\{[^}]*\}/g;
+
+		const selection = editor.selection;
+        const text = editor.document.getText(selection); 
+		console.log(text);
+
+		let result = text.replace(curly_regex, (a) => {
+			if (counter > 9) {
+				return `/*i=${counter++}*/${a}`
+			}				
+			else {
+				return `/*i=${counter++} */${a}`
+			}
+		});
+		console.log(result);
+
+		editor.edit(editBuilder => {
+				editBuilder.replace(selection, result);
+		});
 
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from array-indexer!');
