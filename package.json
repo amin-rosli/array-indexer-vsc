@@ -12,10 +12,26 @@
   "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "array-indexer.helloWorld",
-      "title": "Hello World"
-    }]
+    "commands": [
+      {
+        "command": "array-indexer.addIncrement",
+        "title": "Hello World"
+      },
+      {
+        "command": "array-indexer.removeIncrement",
+        "title": "Hello World"
+      }
+    ],
+    "keybindings":[
+      {
+        "command": "array-indexer.addIncrement",
+        "key": "ctrl+alt+c"
+      },
+      {
+        "command": "array-indexer.removeIncrement",
+        "key": "ctrl+alt+x"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",
