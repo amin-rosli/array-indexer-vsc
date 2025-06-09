@@ -15,21 +15,43 @@
     "commands": [
       {
         "command": "array-indexer.addIncrement",
-        "title": "Hello World"
+        "title": "Add index to selection"
       },
       {
         "command": "array-indexer.removeIncrement",
-        "title": "Hello World"
+        "title": "Remove index from selection"
       }
     ],
     "keybindings":[
       {
         "command": "array-indexer.addIncrement",
-        "key": "ctrl+alt+c"
+        "key": "ctrl+alt+9",
+        "when": "editorHasSelection"
       },
       {
         "command": "array-indexer.removeIncrement",
-        "key": "ctrl+alt+x"
+        "key": "ctrl+alt+0",
+        "when": "editorHasSelection"
+      }
+    ],
+    "configuration":[
+      {
+        "title": "array-indexer",
+        "type": "object",
+        "properties": {
+          "array-indexer.indexCharacter": {
+            "type": "string",
+            "default": "{",
+            "description": "Character to index",
+            "enum": ["{", "[", "(", "All"],
+            "enumDescriptions": [
+              "Curly brackets: {",
+              "Square brackets: [",
+              "Parentheses: (",
+              "All : { , [ , ("
+            ]
+          }
+        }
       }
     ]
   },

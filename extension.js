@@ -1,16 +1,9 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-
-	console.log('Congratulations, your extension "array-indexer" is now active!');
 
 	const addIncrementCommand = vscode.commands.registerCommand('array-indexer.addIncrement', function () {
 
@@ -19,12 +12,9 @@ function activate(context) {
 
 		const selection = editor.selection;
         const text = editor.document.getText(selection); 
-		console.log(text);
 
 		let result = removeComment(text);
 		result = addComment(result);
-
-		console.log(result);
 
 		editor.edit(editBuilder => {
 			editBuilder.replace(selection, result);
@@ -35,7 +25,7 @@ function activate(context) {
 	});
 
 	const removeIncrementCommand = vscode.commands.registerCommand('array-indexer.removeIncrement', function () {
-		// The code you place here will be executed every time your command is executed
+		
         const editor = vscode.window.activeTextEditor;
         if (!editor) return;
 		
@@ -52,33 +42,43 @@ function activate(context) {
 		vscode.window.showInformationMessage('Removed index from array!');
 	});
 
-	function removeComment(selected_text){
+	function removeComment(text){
 		const uncomment_regex = /\/\*i=\d+\s*\*\//g;
 		
-		return selected_text.replace(uncomment_regex, '');
+		return text.replace(uncomment_regex, '');
 	}
 	
-	function addComment(selected_text){
-		const comment_regex = /\n\s*\{/g;
+	function addComment(text){
+		const comment_regex = setCommentRegex();
 		let counter = 0;
+        let lines = text.split('\n');
 
-		let result = selected_text.replace(/\{/ , `/*i=${counter++} */$&`)
+		for(i = 0; i < lines.length; i++){
+			lines[i] = lines[i].replace(comment_regex, (a) => {
+				if (counter > 9) {
+					return `/*i=${counter++}*/${a}`;
+				}				
+				else {
+					return `/*i=${counter++} */${a}`;
+				}
+			});	
+		}
+		return lines.join('\n');
+	}
 
-		result = result.replace(comment_regex, (a) => {
-			
-			const newlineAndSpaces = a.match(/\n\s*/);
+	function setCommentRegex(){
+		const config = vscode.workspace.getConfiguration('array-indexer');
+		const charToIndex = config.get('indexCharacter');
 
-			console.log(newlineAndSpaces);
-
-			if (counter > 9) {
-				return `${newlineAndSpaces}/*i=${counter++}*/{`
-			}				
-			else {
-				return `${newlineAndSpaces}/*i=${counter++} */{`
-			}
-		});
-
-		return result;
+		if (charToIndex == '{') {
+			return /\{/;
+		} else if (charToIndex == '['){
+			return /\[/;
+		} else if (charToIndex == '['){
+			return /\{/;
+		} else { 
+			return /[\{\[\(]/;
+		}
 	}
 
 	context.subscriptions.push(addIncrementCommand);
