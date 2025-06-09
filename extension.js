@@ -10,15 +10,10 @@ const vscode = require('vscode');
  */
 function activate(context) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "array-indexer" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
 	const addIncrementCommand = vscode.commands.registerCommand('array-indexer.addIncrement', function () {
-		// The code you place here will be executed every time your command is executed
+
         const editor = vscode.window.activeTextEditor;
         if (!editor) return;
 
@@ -32,7 +27,7 @@ function activate(context) {
 		console.log(result);
 
 		editor.edit(editBuilder => {
-				editBuilder.replace(selection, result);
+			editBuilder.replace(selection, result);
 		});
 
 		// Display a message box to the user
@@ -46,11 +41,8 @@ function activate(context) {
 		
 		const selection = editor.selection;
         const text = editor.document.getText(selection); 
-		console.log(text);
 
 		let result = removeComment(text);
-
-		console.log(result);
 
 		editor.edit(editBuilder => {
 			editBuilder.replace(selection, result);
@@ -67,15 +59,22 @@ function activate(context) {
 	}
 	
 	function addComment(selected_text){
-		const comment_regex = /\{[^}]*\}/g;
+		const comment_regex = /\n\s*\{/g;
 		let counter = 0;
 
-		let result = selected_text.replace(comment_regex, (a) => {
+		let result = selected_text.replace(/\{/ , `/*i=${counter++} */$&`)
+
+		result = result.replace(comment_regex, (a) => {
+			
+			const newlineAndSpaces = a.match(/\n\s*/);
+
+			console.log(newlineAndSpaces);
+
 			if (counter > 9) {
-				return `/*i=${counter++}*/${a}`
+				return `${newlineAndSpaces}/*i=${counter++}*/{`
 			}				
 			else {
-				return `/*i=${counter++} */${a}`
+				return `${newlineAndSpaces}/*i=${counter++} */{`
 			}
 		});
 
