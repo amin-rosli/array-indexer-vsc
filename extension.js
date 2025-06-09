@@ -11,7 +11,7 @@ function activate(context) {
         if (!editor) return;
 
 		const selection = editor.selection;
-        const text = editor.document.getText(selection); 
+        const text = editor.document.getText(selection);
 
 		let result = removeComment(text);
 		result = addComment(result);
@@ -25,12 +25,12 @@ function activate(context) {
 	});
 
 	const removeIncrementCommand = vscode.commands.registerCommand('array-indexer.removeIncrement', function () {
-		
+
         const editor = vscode.window.activeTextEditor;
         if (!editor) return;
-		
+
 		const selection = editor.selection;
-        const text = editor.document.getText(selection); 
+        const text = editor.document.getText(selection);
 
 		let result = removeComment(text);
 
@@ -44,26 +44,46 @@ function activate(context) {
 
 	function removeComment(text){
 		const uncomment_regex = /\/\*i=\d+\s*\*\//g;
-		
+
 		return text.replace(uncomment_regex, '');
 	}
-	
-	function addComment(text){
-		const comment_regex = setCommentRegex();
-		let counter = 0;
-        let lines = text.split('\n');
 
-		for(i = 0; i < lines.length; i++){
-			lines[i] = lines[i].replace(comment_regex, (a) => {
-				if (counter > 9) {
-					return `/*i=${counter++}*/${a}`;
-				}				
-				else {
-					return `/*i=${counter++} */${a}`;
-				}
-			});	
-		}
-		return lines.join('\n');
+	function addComment(text) {
+	    const comment_regex = setCommentRegex();
+	    let counter = 0;
+
+	    let lines = text.split('\n');
+
+	    // First pass: Add raw comments (unformatted)
+	    for (let i = 0; i < lines.length; i++) {
+	        // lines[i] = lines[i].replace(comment_regex, `/*i=${counter++}*/$&`);
+			if(comment_regex.test(lines[i])){
+				counter++;
+			}
+	    }
+
+	    // Determine the max width for padding
+	    const maxDigits = (counter - 1).toString().length;
+		console.log(maxDigits);
+		counter = 0;
+	    // Second pass: Format the comments with padding
+	    for (let i = 0; i < lines.length; i++) {
+
+			let couterPadded =  String(counter).padEnd(maxDigits, ' ');
+			lines[i] = lines[i].replace(comment_regex, `/*i=${couterPadded}*/$&`);
+			counter++;
+	        // const indexComment = lines[i].match(/\/\*i=\d+\*\//);
+
+	        // if (indexComment) {
+	        //     const index = indexComment[0].match(/\d+/);
+
+	        //     const padded = String(index).padEnd(maxDigits, ' ');
+			// 	console.log(padded);
+	        //     lines[i] = lines[i].replace(/\/\*i=\d+\*\//, `/*i=${padded}*/`);
+	        // }
+	    }
+
+	    return lines.join('\n');
 	}
 
 	function setCommentRegex(){
@@ -76,7 +96,7 @@ function activate(context) {
 			return /\[/;
 		} else if (charToIndex == '['){
 			return /\{/;
-		} else { 
+		} else {
 			return /[\{\[\(]/;
 		}
 	}
