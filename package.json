@@ -15,11 +15,15 @@
     "commands": [
       {
         "command": "array-indexer.addIncrement",
-        "title": "Add index to selection"
+        "title": "Array Indexer: Add index to selection"
       },
       {
         "command": "array-indexer.removeIncrement",
-        "title": "Remove index from selection"
+        "title": "Array Indexer: Remove index from selection"
+      },
+      {
+        "command": "array-indexer.setIndexCharacter",
+        "title": "Array Indexer: Set Index Character"
       }
     ],
     "keybindings":[
@@ -43,12 +47,14 @@
             "type": "string",
             "default": "{",
             "description": "Character to index",
-            "enum": ["{", "[", "(", "All"],
+            "enum": ["{", "[", "\"", "'", "(", "Alphanumeric"],
             "enumDescriptions": [
               "Curly brackets: {",
               "Square brackets: [",
+              "Double quotation: \"",
+              "Single quotation: '",
               "Parentheses: (",
-              "All : { , [ , ("
+              "Letters and Numbers: A-Z & 0-9"
             ]
           }
         }
