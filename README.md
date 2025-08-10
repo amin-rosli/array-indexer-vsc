@@ -27,4 +27,4 @@ You can modify the keybinds for `Add Increment` and `Remove Increment` there.
 
 ## Example
 
-![video](media/Example.gif)
+![video](https://github.com/amin-rosli/array-indexer-vsc/blob/dev1/media/Example.gif)
