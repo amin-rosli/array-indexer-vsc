@@ -1,5 +1,9 @@
 # Array Indexer
 
+## Example
+
+![video](https://github.com/amin-rosli/array-indexer-vsc/blob/dev1/media/Example.gif)
+
 ## Features
 
 Personal tool for myself but what it could do:
@@ -24,7 +28,3 @@ Personal tool for myself but what it could do:
 ### Keybinds.json
 
 You can modify the keybinds for `Add Increment` and `Remove Increment` there.
-
-## Example
-
-![video](https://github.com/amin-rosli/array-indexer-vsc/blob/dev1/media/Example.gif)
